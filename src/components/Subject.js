@@ -12,7 +12,13 @@ class Subject extends Component {
         console.log('Subject render');
         return (
             <header>
-                <h1>{this.props.title}</h1>
+                <h1><a href="/" onClick={function(e){
+                    console.log(this.state.test);
+                    e.preventDefault();
+                    this.setState({
+                        test:this.state.test
+                    });
+                }.bind(this)}>{this.props.title}</a></h1>
                 {this.props.sub}
             </header>
         );

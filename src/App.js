@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Toc from './components/Toc';
 import Content from './components/Content';
-//import Subject from './components/Subject';
+import Subject from './components/Subject';
 import './App.css';
 
 //class 하나의 최상의 태그만 작성해야 됨
@@ -36,20 +36,21 @@ class App extends Component {
     }
     return (
       <div className="App">
-        {/* <Subject 
+        <Subject 
           title={this.state.subject.title} 
           sub={this.state.subject.sub}>
-        </Subject> */}
-        <header>
+        </Subject>
+        {/* <header>
             <h1><a href="/" onClick={function(e){
               console.log(e);
+              console.log(this);
               e.preventDefault();
-              this.setState({
-                mode : 'welcome'
-              });
-            }.bind(this)}>{this.state.subject.title}</a></h1>
+              // this.setState({
+              //   mode : 'welcome'
+              // });
+            }.bind(Subject.props)}>{this.state.subject.title}</a></h1>
             {this.state.subject.sub}
-        </header>
+        </header> */}
         <Toc data={this.state.contents}></Toc>
         <Content title={_title} desc={_desc}></Content>
       </div>
