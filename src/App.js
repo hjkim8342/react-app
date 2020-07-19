@@ -28,7 +28,6 @@ class App extends Component {
 
   render() {
     console.log("App render");
-    debugger;
     var _title, _desc, _article = null;
     if (this.state.mode === "welcome") {
       _title = this.state.welcome.title;
