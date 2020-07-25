@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import TOC     from "./components/TOC"
-import Content from "./components/Content"
+import ReadContent from "./components/ReadContent"
+import CreateContent from "./components/CreateContent"
+import UpdateContent from "./components/UpdateContent"
 import Subject from "./components/Subject"
+import Control from "./components/Control"
 import Subject2 from "./components/Subject2"
 import './App.css';
 
@@ -12,7 +15,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      mode : "read",
+      mode : "welcome",
       selected_content_id : 2,
       subject:{title:'WEB', sub:'World Wide Web!!'},
       welcome:{title :'welcome' , desc : 'Hello, React!!'},
@@ -25,27 +28,78 @@ class App extends Component {
     }
   }
 
-  render(){
-    var _title, _desc = null;
-    if(this.state.mode === 'welcome'){
-      _title = this.state.welcome.title;
-      _desc = this.state.welcome.desc
-    }else if(this.state.mode === 'read'){
-      
-      var i = 0 ;
+  getReadContent(){
+    var i = 0 ;
 
       while(i < this.state.contents.length){
         var data = this.state.contents[i];
         
         if(data.id === this.state.selected_content_id){
-          _title = data.title;
-          _desc = data.desc;
           break;
         }
         
         i = i + 1;
-      }      
+      }
+
+      return data;
+  }
+
+  getContent(){
+    var _title, _desc , _article= null;
+    if(this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+    
+    } else if(this.state.mode === 'read'){
+      
+      var _content = this.getReadContent();      
+      _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>;
+
+    } else if(this.state.mode === 'create'){
+    
+      _article = <CreateContent onSubmit={function(_title, _desc){
+        
+        var newContents = this.state.contents.concat({
+          id : this.state.contents.length + 1,
+          title: _title ,
+          desc: _desc
+
+        });
+        
+        this.setState({
+          contents : newContents,
+          mode : 'read'
+        })
+
+      }.bind(this)}></CreateContent>;
+    } else if(this.state.mode === 'update'){
+      
+      _content = this.getReadContent();
+
+      _article = <UpdateContent data={_content} onSubmit={function(_id,_title, _desc){
+        var newContents = Array.from(this.state.contents);
+        
+        for(var i=0; i < newContents.length; i++){
+          if(newContents[i].id === _id){
+            
+            newContents[i] = {id : _id , title : _title, desc : _desc}
+            break;
+          }
+        }
+        
+        this.setState({
+          contents : newContents,
+          mode : 'read'
+        })
+      }.bind(this)}></UpdateContent>;
     }
+
+    return _article;
+  }
+
+  render(){
+    
     return (
       <div className="App">
           <Subject 
@@ -71,7 +125,7 @@ class App extends Component {
 
           {/* <Subject title="React" sub="For UI"></Subject>
           <Subject></Subject> */}
-
+          
           <TOC 
             onChangePage={function(id){
               this.setState({
@@ -81,8 +135,36 @@ class App extends Component {
           }.bind(this)} data={this.state.contents}
           >
           </TOC>
+
+          <Control onChangeMode={function(_mode){
+
+            if(_mode === 'delete'){
+              if(window.confirm('삭제??')){
+                var _content = Array.from(this.state.contents)
+                var i =0;
+                while(i < _content.length){
+                  if(_content[i].id === this.state.selected_content_id){
+                    _content.splice(i,1)
+                    break;
+                  }
+
+                  i++;
+                }
+              }
+        
+              this.setState({
+                mode : 'welcome',
+                contents : _content
+              })
+            }else{
+              this.setState({
+                mode : _mode
+              })
+            }
+            
+          }.bind(this)}></Control>
           
-          <Content title={_title} desc={_desc}></Content>
+          {this.getContent()}
           
           {/* <Content title="React" desc="React is Easy"></Content> */}
       
