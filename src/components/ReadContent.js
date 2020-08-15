@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-class Content extends Component {
+//해당 컴퍼넌트 안에서 props 변경 불가 
+class ReadContent extends Component {
   render () {
     console.log('Content render');
     return (
@@ -12,4 +13,4 @@ class Content extends Component {
   }
 }
 
-export default Content;
+export default ReadContent;
